@@ -111,19 +111,104 @@
   new PureCounter();
 
   /**
-   * Animate the skills items on reveal
+   * GSAP Scroll Animations
    */
-  let skillsAnimation = document.querySelectorAll('.skills-animation');
-  skillsAnimation.forEach((item) => {
-    new Waypoint({
-      element: item,
-      offset: '80%',
-      handler: function(direction) {
-        let progress = item.querySelectorAll('.progress .progress-bar');
-        progress.forEach(el => {
-          el.style.width = el.getAttribute('aria-valuenow') + '%';
-        });
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Skills progress bar animation with GSAP
+  document.querySelectorAll('.skills-animation').forEach((item) => {
+    let progressBars = item.querySelectorAll('.progress .progress-bar');
+    gsap.from(progressBars, {
+      width: 0,
+      duration: 1.5,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: item,
+        start: "top 80%",
+        once: true
       }
+    });
+  });
+
+  // Section titles reveal
+  document.querySelectorAll('.section-title').forEach((title) => {
+    gsap.from(title, {
+      y: 50,
+      opacity: 0,
+      duration: 1,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: title,
+        start: "top 90%",
+      }
+    });
+  });
+
+  // Staggered reveal for portfolio and service items
+  gsap.from('.portfolio-item', {
+    scale: 0.8,
+    opacity: 0,
+    duration: 0.8,
+    stagger: 0.2,
+    ease: "back.out(1.7)",
+    scrollTrigger: {
+      trigger: '.isotope-container',
+      start: "top 80%",
+    }
+  });
+
+  gsap.from('.service-item', {
+    y: 30,
+    opacity: 0,
+    duration: 0.8,
+    stagger: 0.15,
+    ease: "power2.out",
+    scrollTrigger: {
+      trigger: '.services',
+      start: "top 80%",
+    }
+  });
+
+  /**
+   * Hero Parallax Effect
+   */
+  gsap.to(".hero-parallax-img", {
+    yPercent: 20,
+    ease: "none",
+    scrollTrigger: {
+      trigger: "#hero",
+      start: "top top",
+      end: "bottom top",
+      scrub: true
+    }
+  });
+
+  /**
+   * Magnetic UI Effect
+   */
+  const magneticElements = document.querySelectorAll('.social-links a, .php-email-form button');
+  
+  magneticElements.forEach((el) => {
+    el.addEventListener('mousemove', function(e) {
+      const rect = this.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+
+      gsap.to(this, {
+        x: x * 0.5,
+        y: y * 0.5,
+        duration: 0.4,
+        ease: "power2.out"
+      });
+    });
+
+    el.addEventListener('mouseleave', function() {
+      gsap.to(this, {
+        x: 0,
+        y: 0,
+        duration: 0.4,
+        ease: "elastic.out(1, 0.3)"
+      });
     });
   });
 
@@ -238,6 +323,36 @@ document.querySelector('form').addEventListener('submit', function (e) {
 
   // Reset message visibility
   loadingElement.style.display = 'block';  // Show loading spinner
+  errorElement.style.display = 'none';     // Hide error message
+  sentElement.style.display = 'none';      // Hide success message
+
+  const formData = new FormData(this);
+
+  // Change the fetch URL to Formspree's endpoint for form submission
+  fetch('https://formspree.io/f/xeooenob', {  // Replace with your Formspree endpoint
+      method: 'POST',
+      body: formData,
+  })
+  .then(response => response.json())  // Parse the JSON response
+  .then(data => {
+      loadingElement.style.display = 'none';  // Hide loading spinner
+
+      // Show success or error message based on the response
+      if (data.success) {
+          sentElement.textContent = data.message || 'Your message has been sent. Thank you!';  // Set success message
+          sentElement.style.display = 'block';     // Show success message
+      } else {
+          errorElement.textContent = data.message || 'Something went wrong. Please try again.';  // Set error message
+          errorElement.style.display = 'block';     // Show error message
+      }
+  })
+  .catch(() => {
+      loadingElement.style.display = 'none';  // Hide loading spinner on error
+      errorElement.textContent = 'An unexpected error occurred. Please try again later.';
+      errorElement.style.display = 'block';   // Show error message
+  });
+});
+ock';  // Show loading spinner
   errorElement.style.display = 'none';     // Hide error message
   sentElement.style.display = 'none';      // Hide success message
 

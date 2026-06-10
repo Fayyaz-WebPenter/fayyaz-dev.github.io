@@ -57,6 +57,43 @@
   scroll-behavior: smooth;
 }
 
+/* Gradient Text Animation */
+@keyframes text-gradient-animate {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.gradient-text {
+  background: linear-gradient(-45deg, var(--accent-color), #8e44ad, #2980b9, #149ddd);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-gradient-animate 5s ease infinite;
+}
+
+/* 3D Card Lift & Glow */
+.portfolio-item, .service-item {
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+.portfolio-item:hover, .service-item:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(20, 157, 221, 0.3);
+  border-color: var(--accent-color);
+}
+
+/* Hero Parallax Image */
+.hero-parallax-img {
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120%; /* Extra height for parallax */
+  z-index: -1;
+}
+
 /*--------------------------------------------------------------
 # General Styling & Shared Classes
 --------------------------------------------------------------*/
@@ -144,7 +181,9 @@ h6 {
 --------------------------------------------------------------*/
 .header {
   color: var(--default-color);
-  background-color: var(--background-color);
+  background-color: color-mix(in srgb, var(--background-color), transparent 30%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   position: fixed;
   top: 0;
   left: 0;
@@ -1256,6 +1295,23 @@ section,
 }
 
 .service-details ul li {
+  padding: 5px 0;
+  display: flex;
+  align-items: center;
+}
+
+.service-details ul i {
+  font-size: 20px;
+  margin-right: 8px;
+  color: var(--accent-color);
+}
+
+/*--------------------------------------------------------------
+# Starter Section Section
+--------------------------------------------------------------*/
+.starter-section {
+  /* Add your styles here */
+}service-details ul li {
   padding: 5px 0;
   display: flex;
   align-items: center;
